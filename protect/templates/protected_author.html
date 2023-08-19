@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cannot Delete Author</title>
+</head>
+<body>
+    <h1> {{ author.name }} silinemiyor</h1>
+    {% if  protected_books is not none %}
+    <p>BU YAZARI SİLEMEZSİN kitapları var  :</p>
+    <ul>
+        {% for book in protected_books %}
+        <li><a href="{% url 'delete_book' book.id %}">{{ book.title }}</a></li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'author_list' %}">YAZARLAR</a>
+<H1></H1>
+    <a href="{% url 'book_list' %}">KİTAPLAR </a>
+    {% else %}
+    <p>BU YAZARI SİLEMEZSİN !!  notları  var :</p>
+    <ul>
+        {% for note in protected_notes %}
+        <li><a href="{% url 'delete_book' book.id %}">{{ note.note }}</a></li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'author_list' %}">YAZARLAR</a>
+<H1></H1>
+    <a href="{% url 'book_list' %}">KİTAPLAR </a>
+    {% endif %}
+</body>
+</html>
