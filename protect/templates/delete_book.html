@@ -10,6 +10,7 @@
         <p>Are you sure you want to delete this book?</p>
         <input type="submit" value="Delete">
     </form>
-    <a href="{% url 'book_list' %}">Cancel</a>  {# Yönlendirilecek yerin ismini uygun şekilde güncelleyin #}
+    <a href="{% url 'delete_author' author_id=book.author.id %}">Cancel</a>  {# Yönlendirilecek yerin ismini uygun şekilde güncelleyin #}
+
 </body>
 </html>
