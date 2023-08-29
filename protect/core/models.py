@@ -8,7 +8,7 @@ class Author(models.Model):
     created = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return self.name 
+        return self.name+" - "+self.last_name
 
 class Book(models.Model):
     title = models.CharField(max_length=100)
@@ -20,10 +20,12 @@ class Book(models.Model):
         return self.title + " - " + self.author.name 
 
 class AuthorNotes(models.Model):
+    title= models.CharField(max_length=100,blank=True,null=True)
     author = models.ForeignKey(Author, on_delete=models.PROTECT)
     note = models.TextField()
 
+
     def __str__(self):
-        return self.author.name + " " + self.author.last_name 
+        return self.title 
 #sentry e sinyal gönderilecekk 
 
