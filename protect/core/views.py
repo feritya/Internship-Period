@@ -3,37 +3,90 @@ from django.db.models.deletion import ProtectedError
 from .models import Author, Book,AuthorNotes
 from django.contrib.admin.utils import get_deleted_objects
 from django.http import HttpResponseForbidden
-
-
-
-
-
 from django.db.models import ProtectedError
-def delete_author(request, author_id):
-    author = get_object_or_404(Author, pk=author_id)
+from django.views import View
+
+
+
+
+class AuthorListView(View):
+    template_name = 'author_listt.html'
     
-    if request.method == 'POST':
-        try:
-            author.delete()
-            return redirect('author_list')
-        except ProtectedError:
-            protected_books = Book.objects.filter(author=author)
-            protected_notes = AuthorNotes.objects.filter(author=author)
-
-
-            return render(request, 'protected_author.html', {'author': author, 'protected_books': protected_books, 'protected_notes': protected_notes})
-    elif request.method == 'GET':
-        try:
-            author.delete()
-            return redirect('author_list')
-        except ProtectedError:
-            protected_books = Book.objects.filter(author=author)
-            protected_notes = AuthorNotes.objects.filter(author=author)
-
-
-            return render(request, 'protected_author.html', {'author': author, 'protected_books': protected_books, 'protected_notes': protected_notes})
+    def get(self, request):
+        authors = Author.objects.all()
+        return render(request, self.template_name, {'authors': authors})
     
-    return render(request, 'author_listt.html', {'author': author})
+    def post(self, request):
+        authors = Author.objects.all()
+        protected_books=[]
+        protected_notes=[]
+
+        for author in authors:
+            try:
+                author.delete()
+            except ProtectedError:
+                protected_books = Book.objects.filter(author=author)
+                protected_notes = AuthorNotes.objects.filter(author=author)
+        if protected_books or protected_notes:
+            print("protected_books or protected_notes")
+            print(protected_books)
+            control=True
+            return render(request, 'author_listt.html', {'authors': authors,'control':control ,'protected_books':protected_books,'protected_notes':protected_notes})
+        
+
+        return render(request, self.template_name, {'authors': authors})
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# def delete_author(request, author_id):
+#     author = get_object_or_404(Author, pk=author_id)
+    
+#     if request.method == 'POST':
+#         try:
+#             author.delete()
+#             return redirect('author_list')
+#         except ProtectedError:
+#             protected_books = Book.objects.filter(author=author)
+#             protected_notes = AuthorNotes.objects.filter(author=author)
+
+
+#             return render(request, 'protected_author.html', {'author': author, 'protected_books': protected_books, 'protected_notes': protected_notes})
+#     elif request.method == 'GET':
+#         try:
+#             author.delete()
+#             return redirect('author_list')
+#         except ProtectedError:
+#             protected_books = Book.objects.filter(author=author)
+#             protected_notes = AuthorNotes.objects.filter(author=author)
+
+
+#             return render(request, 'protected_author.html', {'author': author, 'protected_books': protected_books, 'protected_notes': protected_notes})
+    
+#     return render(request, 'author_listt.html', {'author': author})
 
 
 def delete_book(request, book_id):
@@ -55,9 +108,9 @@ def delete_note(request, note_id):
     return render(request, 'delete_note.html', {'note': note})
 
 
-def author_list(request):
-    authors = Author.objects.all()
-    return render(request, 'author_listt.html', {'authors': authors})
+# def author_list(request):
+#     authors = Author.objects.all()
+#     return render(request, 'author_listt.html', {'authors': authors})
 
 def book_list(request):
     books = Book.objects.all()
