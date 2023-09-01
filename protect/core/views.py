@@ -9,8 +9,6 @@ from django.views import View
 
 
 class AuthorListView(View):
-    
-    
     def get(self, request):
         authors = Author.objects.all()
         protected_books=[]
@@ -19,10 +17,6 @@ class AuthorListView(View):
         for author in authors:
             books=[]
             notes=[]
-            # for b in books:
-            #     protected_books.append(b.title)
-            # for n in notes:
-            #     protected_notes.append(n.title)
             protected_books += Book.objects.filter(author=author)
             protected_notes += AuthorNotes.objects.filter(author=author) 
             print(protected_books)
@@ -65,10 +59,15 @@ def object_list(request, author_id):
     notes = AuthorNotes.objects.filter(author=author)
     return render(request, 'object_list.html', {'author': author,'books':books,'notes':notes})
 
+def detail_book(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
 
+    return render(request, 'detail_book.html', {'book': book})
 
+def detail_note (request, note_id):
+    note = get_object_or_404(AuthorNotes, pk=note_id)
 
-
+    return render(request, 'detail_note.html', {'note': note})
 
 def delete_book(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
@@ -79,16 +78,6 @@ def delete_book(request, book_id):
         
     return render(request, 'note_list.html', {'book': book})
 
-
-
-
-
-
-
-
-
-
-
 def delete_note(request, note_id):
     note = get_object_or_404(AuthorNotes, pk=note_id)
     
@@ -98,39 +87,9 @@ def delete_note(request, note_id):
         
     return render(request, 'book_list.html', {'note': note})
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def book_list(request):
     books = Book.objects.all()
     return render(request, 'book_list.html', {'books': books})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 def note_list(request):
     notes = AuthorNotes.objects.all()

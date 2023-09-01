@@ -11,4 +11,6 @@ urlpatterns = [
     path('note_list/', views.note_list, name='note_list'),
     path('object_list/<int:author_id>/', views.object_list, name='object_list'),
     path('delete_non_protected_author/<int:author_id>/', views.delete_non_protected_author, name='delete_non_protected_author'),
+    path('detail_book/<int:book_id>/', views.detail_book, name='detail_book'),
+    path('detail_note/<int:note_id>/', views.detail_note, name='detail_note'),
 ]

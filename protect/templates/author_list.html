@@ -43,7 +43,7 @@
                                     <tr>
 
                                         <th>Yazar</th>
-                                        <th>Sil</th>
+                                        <th> Sil   </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -52,7 +52,7 @@
                                         <td class="sorting_1">{{ author.name }} {{author.last_name}}</td>
                                         {% if  author.is_protect %}
                                         <td>
-                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#author-protected-delete-{{author.id}}">Delete</button>
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" id="openModalButton-{{ author.id }}" data-target="#author-protected-delete-{{author.id}}">Delete</button>
                                         </td>
                                         {% else %}
                                         <td>
@@ -73,9 +73,9 @@
     {% for author in authors %}
 
             {% comment %} burada yazarın kitabı be notu yok demektir bu alanda silme işlemi yaplacak {% endcomment %}
-            <div method="post"class="modal fade" id="author-protected-delete-{{author.id}}" tabindex="-1" role="dialog" aria-labelledby="myCenterModalLabel" aria-hidden="true">
+            <div method="post" class="modal fade" id="author-protected-delete-{{author.id}}" tabindex="-1" role="dialog" aria-labelledby="myCenterModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
+                    <div class="modal-content"> 
                         <div class="modal-header">
                             <h4 class="modal-title" id="myCenterModalLabel">Yazar Silme</h4>
                             <p class="text-muted font-13 mb-4">
@@ -86,7 +86,8 @@
                                 <thead>
                                     <tr>
                                         <th>tür</th>
-                                        <th>adı </th>
+                                        <th>adı</th>
+                                        <th>detaya git</th>
                                         <th>Sil</th>
                                     </tr>
                                 </thead>
@@ -94,12 +95,14 @@
                                     {% for book in protected_books %}
                                     <tr>
                                         {% if author == book.author %}                                       
-                                        <td class="sorting_1">book</td>
+                                        <td class="sorting_1">   book    </td>
                                         <td>{{book.title}}</td>
+                                        <td>
+                                            <a href="{% url 'detail_book' book.id %}" class="btn btn-primary">Detaya Git</a>
                                         <td>
                                             <form method="post" action="{% url 'delete_book' book.id %}">
                                                 {% csrf_token %}
-                                                <button type="submit" class="btn btn-danger">Sil</button>
+                                                <button type="submit" class="btn btn-danger" >  Sil  </button>
                                             </form>
                                             {% endif %}
                                         </td>
@@ -112,6 +115,8 @@
                                         <td class="sorting_1">note</td>
                                         
                                         <td>{{note.title}}</td>
+                                        <td>
+                                            <a href="{% url 'detail_note' note.id %}" class="btn btn-primary">Detaya Git</a>
                                         <td>
                                             <form method="post" action="{% url 'delete_note' note.id %}">
                                                 {% csrf_token %}
@@ -213,11 +218,35 @@
     }); 
 
     </script>
+
+    <script>
+        // Modalı aç
+        function openModal(authorId) {
+          var modal = document.getElementById("author-protected-delete-" + authorId);
+          modal.classList.add("show");
+          modal.style.display = "block";
+        }
+        
+        // Her düğme için bir click olayı dinleyici ekleyin
+        {% for author in authors %}
+        document.getElementById("openModalButton-{{ author.id }}").addEventListener("click", function () {
+          openModal({{ author.id }});
+        });
+        {% endfor %}
+        // Sayfa yenilendikten sonra açık olan modalları tekrar aç
+        window.onload = function () {
+          var openModals = document.querySelectorAll('.modal.show');
+          openModals.forEach(function (modal) {
+            modal.style.display = "block";
+          });
+        };
+        </script>
     <!-- Datatables init -->
     <script src="{% static 'assets/js/pages/datatables.init.js' %}"></script>
     
     <!-- App js -->
     <script src="{% static 'assets/js/app.min.js' %}"></script>
+    <table id="scroll-horizontal-ferit2" class="table w-100 nowrap" style="width: 100%;">
     
 </body>
 </html>
