@@ -6,6 +6,7 @@ class Author(models.Model):
     last_name = models.CharField(max_length=50)
     birth = models.DateField()
     created = models.DateField(auto_now_add=True)
+    is_protect = models.BooleanField(default=False)
     
 
     def __str__(self):
